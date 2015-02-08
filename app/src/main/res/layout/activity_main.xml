@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:weightSum="1">
+
+    <TextView
+        android:id="@+id/bluetoothstate"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_span="2" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/listEKGfiles"
+        android:id="@+id/listEKGfiles"
+        android:enabled="true"
+        android:layout_below="@+id/bluetoothstate"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:focusableInTouchMode="false" />
+
+    <Button
+        android:id="@+id/listBTdevices"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/listBTdevices"
+        android:enabled="false"
+        android:layout_below="@+id/bluetoothstate"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <FrameLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:id="@+id/ekgView"
+        android:layout_column="0"
+        android:layout_below="@+id/listEKGfiles">
+
+    </FrameLayout>
+
+</RelativeLayout>

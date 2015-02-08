@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">SmartEKG</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+    <string name="title_activity_list_paired_devices">ListPairedDevicesActivity</string>
+    <string name="title_activity_android_bluetooth">AndroidBluetooth</string>
+    <string name="bt_device">Select BT EKG Device</string>
+    <string name="listBTdevices">List BT Devices</string>
+    <string name="listEKGfiles">List EKG Files</string>
+    <string name="title_activity_draw_ekg">EKG</string>
+    <string name="title_activity_list_ekg_files">ListEkgFilesActivity</string>
+
+</resources>

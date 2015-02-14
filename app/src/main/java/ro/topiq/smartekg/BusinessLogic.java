@@ -4,7 +4,6 @@ import android.content.Context;
 import android.media.AudioFormat;
 import android.media.AudioManager;
 import android.media.AudioTrack;
-import android.media.ToneGenerator;
 
 import java.util.Vector;
 
@@ -25,17 +24,17 @@ public class BusinessLogic implements Runnable {
 
         int nIterations = 0;
 
-        while (!(bResult = proxy.FindToEKGDevice())) {
-            nIterations++;
-
-            m_drawView.drawStatus(proxy.GetBluetoothStatus() + " (" + String.valueOf(nIterations) + "/10)");
-            m_drawView.postInvalidate();
-
-            SafeSleep(1000);
-
-            if (nIterations >= 10)
-                break; //aborting, switching to simulation
-        }
+//        while (!(bResult = proxy.FindToEKGDevice())) {
+//            nIterations++;
+//
+//            m_drawView.drawStatus(proxy.GetBluetoothStatus() + " (" + String.valueOf(nIterations) + "/10)");
+//            m_drawView.postInvalidate();
+//
+//            SafeSleep(1000);
+//
+//            if (nIterations >= 10)
+//                break; //aborting, switching to simulation
+//        }
 
         if (!bResult) {
             m_drawView.drawStatus("Unable to get data via Bluetooth, going into Simulation mode...");
@@ -156,7 +155,7 @@ public class BusinessLogic implements Runnable {
             try
             {
                 AudioTrack tone = generateTone(280, 180);
-//                tone.play();
+                tone.play();
             }
             catch (Exception e)
             {

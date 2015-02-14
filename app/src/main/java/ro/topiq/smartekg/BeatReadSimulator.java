@@ -15,26 +15,29 @@ public class BeatReadSimulator {
 
     private ArrayList<Integer> m_nEcgSamples = new ArrayList<>();
     private int m_nIndex = -1;
-    private int m_nSampleRate = 51; //HARDCODED! For simulation purpose
+    private int m_nSampleRate = -1;
 
     /*
      * load the file with recorded data
-     * */ {
+     * */
+    public BeatReadSimulator ( String ekgFile ){
         InputStream inStr = null;
         try {
             inStr = new BufferedInputStream(
                     new FileInputStream(
                             Environment.getExternalStoragePublicDirectory(
                                     Environment.DIRECTORY_DOWNLOADS) +
-                                    "/SmartEKG" +
-                                    "/sample.ekg"));
+                                    "/SmartEKG/" +
+                                    ekgFile));
         InputStreamReader isr = new InputStreamReader(inStr);
-//                InputStreamReader isr = new InputStreamReader(data);
+
         BufferedReader bufferedReader = new BufferedReader(isr);
         StringBuilder strBuild = new StringBuilder();
         String lastVal;
 
         try {
+            // read bitrate from file (the first line)
+            m_nSampleRate = Integer.parseInt(bufferedReader.readLine());
             while ((lastVal = bufferedReader.readLine()) != null) {
                 strBuild.append(lastVal);
 

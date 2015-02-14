@@ -8,9 +8,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-import java.io.File;
-import java.io.FilenameFilter;
-
 
 public class MainActivity extends Activity {
 
@@ -83,23 +80,25 @@ public class MainActivity extends Activity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        Intent intent = new Intent();
+
         if(requestCode == REQUEST_ENABLE_BT){
-
-            Intent intent = new Intent();
-
             if(resultCode == RESULT_OK) {
                 intent.setClass(MainActivity.this, ListPairedDevicesActivity.class);
                 startActivityForResult(intent, REQUEST_PAIRED_DEVICE);
-            } else {
-                // check for EKG files
-                intent.setClass(MainActivity.this, ListEkgFilesActivity.class);
-                startActivityForResult(intent, REQUEST_EKG_FILE);
             }
         }
         if (requestCode == REQUEST_PAIRED_DEVICE){
             if(resultCode == RESULT_OK){
                 // switch to Draw EKG activity
-                Intent intent = new Intent(this, DrawEKG.class);
+                intent.setClass(MainActivity.this, DrawEKG.class);
+                startActivity(intent);
+            }
+        }
+        if( requestCode == REQUEST_EKG_FILE) {
+            if(resultCode == RESULT_OK) {
+                // switch to Draw EKG activity
+                intent.setClass(MainActivity.this, DrawEKG.class);
                 startActivity(intent);
             }
         }

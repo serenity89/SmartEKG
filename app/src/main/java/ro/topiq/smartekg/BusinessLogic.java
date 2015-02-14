@@ -98,7 +98,7 @@ public class BusinessLogic implements Runnable {
     private void RunSimulation() {
         int nValue = 0;
 
-        BeatReadSimulator simulator = new BeatReadSimulator();
+        BeatReadSimulator simulator = new BeatReadSimulator("sample.ekg");
         HeartBeatClassifier.getInstance().setSampleRate(simulator.getSampleRate());
 
         m_drawView.drawStatus("Analysing heart beat signal, please wait...");

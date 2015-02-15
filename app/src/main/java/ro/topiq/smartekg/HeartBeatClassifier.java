@@ -47,21 +47,21 @@ public class HeartBeatClassifier {
             return result.beatType;
 
         return ECGCODES.NOTQRS;
-/*		{
-            int qrsPosition =  i - result.samplesSinceRWaveIfSuccess;
-			if (result.beatType == ECGCODES.UNKNOWN) 
-			{
-				stateText.setText("A unknown beat type was detected at sample: " + qrsPosition);
-			} 
-			else if (result.beatType == ECGCODES.NORMAL) 
-			{
-				stateText.setText("A normal beat type was detected at sample: " + qrsPosition);
-			} 
-			else if (result.beatType == ECGCODES.PVC) 
-			{
-				stateText.setText("A premature ventricular contraction was detected at sample: " + qrsPosition);
-			}
-		}
-*/
+//		{
+//            int qrsPosition =  i - result.samplesSinceRWaveIfSuccess;
+//			if (result.beatType == ECGCODES.UNKNOWN)
+//			{
+//				stateText.setText("A unknown beat type was detected at sample: " + qrsPosition);
+//			}
+//			else if (result.beatType == ECGCODES.NORMAL)
+//			{
+//				stateText.setText("A normal beat type was detected at sample: " + qrsPosition);
+//			}
+//			else if (result.beatType == ECGCODES.PVC)
+//			{
+//				stateText.setText("A premature ventricular contraction was detected at sample: " + qrsPosition);
+//			}
+//		}
+
     }
 }

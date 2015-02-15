@@ -5,6 +5,7 @@ import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothClass;
 import android.bluetooth.BluetoothDevice;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -70,7 +71,7 @@ public class ListPairedDevicesActivity extends ListActivity {
             case BluetoothClass.Device.Major.UNCATEGORIZED:
                 return "UNCATEGORIZED";
             case BluetoothClass.Device.Major.WEARABLE:
-                return "AUDIO_VIDEO";
+                return "WEARABLE";
             default: return "unknown!";
         }
     }
@@ -80,6 +81,8 @@ public class ListPairedDevicesActivity extends ListActivity {
         super.onListItemClick(l, v, position, id);
 
         Intent intent = new Intent();
+
+        intent.setData(Uri.parse((String)l.getItemAtPosition(position)));
         setResult(RESULT_OK, intent);
         finish();
     }

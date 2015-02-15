@@ -11,9 +11,4 @@
         android:id="@+id/ekg_status"
         android:layout_gravity="left|top"
         android:textColor="#ff91ff3e" />
-
-    <RelativeLayout
-        android:layout_width="fill_parent"
-        android:layout_height="531dp"
-        android:layout_gravity="center_horizontal|bottom"></RelativeLayout>
 </FrameLayout>

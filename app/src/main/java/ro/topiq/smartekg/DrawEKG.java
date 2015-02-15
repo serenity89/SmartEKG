@@ -28,14 +28,16 @@ public class DrawEKG extends Activity {
 
     @Override
     protected void onPause() {
-        ekgThread.interrupt();
         super.onPause();
+        ekgThread.interrupt();
+        finish();
     }
 
     @Override
     protected void onDestroy() {
-        ekgThread.interrupt();
         super.onDestroy();
+        ekgThread.interrupt();
+        finish();
         ekgThread = null;
     }
 }

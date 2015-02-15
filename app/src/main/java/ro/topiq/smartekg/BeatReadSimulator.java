@@ -30,7 +30,7 @@ public class BeatReadSimulator {
         Log.i(LOG_TAG, "Path to selected EKG file: " + fullEkgFilePath);
 
         try {
-            inStream = new BufferedInputStream(new FileInputStream(fullEkgFilePath.substring(0, fullEkgFilePath.length()-1))); // o aberatie
+            inStream = new BufferedInputStream(new FileInputStream(fullEkgFilePath));
             InputStreamReader isr = new InputStreamReader(inStream);
 
             BufferedReader bufferedReader = new BufferedReader(isr);

@@ -24,92 +24,77 @@ public class BusinessLogic implements Runnable {
     }
 
     public void run() {
-        BluetoothProxy proxy = new BluetoothProxy("RNBT-2632");
-        boolean bResult = false;
 
-//        int nIterations = 0;
-//
-//        while (!(bResult = proxy.FindToEKGDevice())) {
-//            nIterations++;
-//
-//            m_drawView.drawStatus(proxy.GetBluetoothStatus() + " (" + String.valueOf(nIterations) + "/2)");
-//            m_drawView.postInvalidate();
-//
-//            SafeSleep(1000);
-//
-//            if (nIterations >= 2)
-//                break; //aborting, switching to simulation
-//        }
+        //request for drawing EKG comes from BT devices list
+        if(m_data.getAction().equals("device")){
+            Log.i(LOG_TAG, "BT Device selected: " + m_data.getData().toString().substring(0, m_data.getData().toString().indexOf('\n')));
+            BluetoothProxy proxy = new BluetoothProxy(m_data.getData().toString().substring(0, m_data.getData().toString().indexOf('\n')));
 
-        if (!bResult) {
+            proxy.FindToEKGDevice();
+
+            //getting data from device
+            m_drawView.drawStatus(proxy.GetBluetoothStatus());
+            m_drawView.postInvalidate();
+            SafeSleep(3000);
+
+            int nAbsolutIndex = 0;
+            int nRetriesConnection = 1;
+
+            while (nRetriesConnection <= 2) {
+                if (!proxy.ConnectToEKGDevice()) {
+                    m_drawView.drawStatus("EKG Device is not online. Will try again in 1 second..." + String.valueOf(nRetriesConnection) + "/2)");
+                    m_drawView.postInvalidate();
+                    nRetriesConnection++;
+                    SafeSleep(1000);
+                    continue;
+                }
+
+                m_drawView.drawStatus("EKG Device online! Receiving data...");
+                m_drawView.postInvalidate();
+                SafeSleep(1000);
+
+                while (true) {
+                    if (proxy.SendData(0x61)) {
+                        SafeSleep(50);
+                        int nCountValues = proxy.ReceiveData();
+                        int nValue;
+
+                        if (nCountValues != -1) {
+                            Vector<Integer> vectValues = proxy.GetReceivedSignalValues();
+
+                            for (int i = 0; i < vectValues.size(); i++) {
+                                nValue = vectValues.elementAt(i);
+                                ProcessValue(nAbsolutIndex, nValue);
+                                ++nAbsolutIndex;
+                                SafeSleep(1000 / 50); //hardcoded
+                            }
+                        }
+                    } else {
+                        SafeSleep(1000);
+                    }
+                }
+            }
+        }
+
+        //request for drawing EKG comes from Sample files list
+        if(m_data.getAction().equals("sample")){
             String inFile;
 
             m_drawView.drawStatus("Unable to get data via Bluetooth, going into Simulation mode...");
             m_drawView.postInvalidate();
             SafeSleep(3000);
             if(m_data.getData() == null){
-                inFile = "sample.ekg\n";
+                inFile = "sample.ekg";
             } else {
                 inFile = m_data.getData().toString();
             }
             Log.i(LOG_TAG, "EKG file selected: " + inFile);
             RunSimulation(inFile);
-            return;
-        }
-
-        //getting data from device
-        m_drawView.drawStatus(proxy.GetBluetoothStatus());
-        m_drawView.postInvalidate();
-        SafeSleep(3000);
-
-        int nAbsolutIndex = 0;
-        int nRetriesConnection = 1;
-
-        while (nRetriesConnection <= 2) {
-            if (!proxy.ConnectToEKGDevice()) {
-                m_drawView.drawStatus("EKG Device is not online. Will try again in 1 second..." + String.valueOf(nRetriesConnection) + "/2)");
-                m_drawView.postInvalidate();
-                nRetriesConnection++;
-                SafeSleep(1000);
-                continue;
-            }
-
-            m_drawView.drawStatus("EKG Device online! Receiving data...");
-            m_drawView.postInvalidate();
-            SafeSleep(1000);
-
-            while (true) {
-                if (proxy.SendData(0x61)) {
-                    SafeSleep(50);
-                    int nCountValues = proxy.ReceiveData();
-                    int nValue = 0;
-
-                    if (nCountValues != -1) {
-                        Vector<Integer> vectValues = proxy.GetReceivedSignalValues();
-
-                        for (int i = 0; i < vectValues.size(); i++) {
-//                            if((i > 0) && (vectValues.elementAt(i-1) > vectValues.elementAt(i))) {
-//                                nValue = vectValues.elementAt(i) + vectValues.elementAt(i)/3;
-//                            }
-//                            if((i > 0) && (vectValues.elementAt(i-1) < vectValues.elementAt(i))) {
-//                                nValue = vectValues.elementAt(i) - vectValues.elementAt(i)/3;
-//                            }
-                            nValue = vectValues.elementAt(i);
-                            ProcessValue(nAbsolutIndex, nValue);
-                            ++nAbsolutIndex;
-                            SafeSleep(1000 / 50); //hardcoded
-                        }
-                    }
-                } else {
-                    SafeSleep(1000);
-                }
-
-            }
         }
     }
 
     private void RunSimulation(String ekgFile) {
-        int nValue = 0;
+        int nValue;
 
         BeatReadSimulator simulator = new BeatReadSimulator(ekgFile);
         HeartBeatClassifier.getInstance().setSampleRate(simulator.getSampleRate());
@@ -136,7 +121,7 @@ public class BusinessLogic implements Runnable {
         short[] samples = new short[count];
         for(int i = 0; i < count; i += 2){
             short sample = (short)(Math.sin(2 * Math.PI * i / (44100.0 / freqHz)) * 0x7FFF);
-            samples[i + 0] = sample;
+            samples[i] = sample;
             samples[i + 1] = sample;
         }
         AudioTrack track = new AudioTrack(AudioManager.STREAM_MUSIC, 44100,

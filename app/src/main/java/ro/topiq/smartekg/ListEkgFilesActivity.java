@@ -30,7 +30,7 @@ public class ListEkgFilesActivity extends ListActivity {
 
         if(ekgFiles.length > 0) {
             for(int i=0; i < ekgFiles.length; i++) {
-                ekgArrayList.add(ekgFiles[i] + "\n");
+                ekgArrayList.add(ekgFiles[i]);
                 Log.i(LOG_TAG, "EKG Files: " + ekgFiles[i]);
             }
         }

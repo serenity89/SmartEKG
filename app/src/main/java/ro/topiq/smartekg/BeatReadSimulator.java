@@ -1,6 +1,7 @@
 package ro.topiq.smartekg;
 
 import android.os.Environment;
+import android.util.Log;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
@@ -13,6 +14,7 @@ import java.util.ArrayList;
 
 public class BeatReadSimulator {
 
+    private static final String LOG_TAG = BeatReadSimulator.class.getSimpleName();
     private ArrayList<Integer> m_nEcgSamples = new ArrayList<>();
     private int m_nIndex = -1;
     private int m_nSampleRate = -1;
@@ -21,34 +23,35 @@ public class BeatReadSimulator {
      * load the file with recorded data
      * */
     public BeatReadSimulator ( String ekgFile ){
-        InputStream inStr = null;
-        try {
-            inStr = new BufferedInputStream(
-                    new FileInputStream(
-                            Environment.getExternalStoragePublicDirectory(
-                                    Environment.DIRECTORY_DOWNLOADS) +
-                                    "/SmartEKG/" +
-                                    ekgFile));
-        InputStreamReader isr = new InputStreamReader(inStr);
-
-        BufferedReader bufferedReader = new BufferedReader(isr);
-        StringBuilder strBuild = new StringBuilder();
-        String lastVal;
+        InputStream inStream = null;
+        String fullEkgFilePath = Environment.getExternalStoragePublicDirectory(
+                                 Environment.DIRECTORY_DOWNLOADS).toString() +
+                                "/SmartEKG/" + ekgFile;
+        Log.i(LOG_TAG, "Path to selected EKG file: " + fullEkgFilePath);
 
         try {
-            // read bitrate from file (the first line)
-            m_nSampleRate = Integer.parseInt(bufferedReader.readLine());
-            while ((lastVal = bufferedReader.readLine()) != null) {
-                strBuild.append(lastVal);
+            inStream = new BufferedInputStream( new FileInputStream( fullEkgFilePath ));
+            InputStreamReader isr = new InputStreamReader(inStream);
 
-                // get value from file
-                m_nEcgSamples.add(Integer.parseInt(lastVal));
+            BufferedReader bufferedReader = new BufferedReader(isr);
+            StringBuilder strBuild = new StringBuilder();
+            String lastVal = null;
+
+            try {
+                // read bitrate from file (the first line)
+                m_nSampleRate = Integer.parseInt(bufferedReader.readLine());
+                Log.i(LOG_TAG, "Bitrate: " + lastVal);
+
+                while ((lastVal = bufferedReader.readLine()) != null) {
+                    strBuild.append(lastVal);
+
+                    // get value from EKG ekgFile
+                    m_nEcgSamples.add(Integer.parseInt(lastVal));
+                }
+                m_nIndex = -1;
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-            m_nIndex = -1;
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }

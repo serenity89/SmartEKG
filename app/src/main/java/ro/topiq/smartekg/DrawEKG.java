@@ -1,6 +1,7 @@
 package ro.topiq.smartekg;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 
@@ -21,7 +22,7 @@ public class DrawEKG extends Activity {
         setContentView(m_drawView);
 
         //Simulate heart beat signal
-        new Thread(new BusinessLogic(m_drawView, this.getApplicationContext())).start();
+        new Thread(new BusinessLogic(m_drawView, this.getApplicationContext(), this.getIntent())).start();
     }
 
 }

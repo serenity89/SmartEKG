@@ -14,30 +14,30 @@ import eplimited.osea.classification.ECGCODES;
 public class BusinessLogic implements Runnable {
     EGKGraphicalView m_drawView = null;
     Context m_context = null;
+    Intent m_data = null;
     private static final String LOG_TAG = BusinessLogic.class.getSimpleName();
 
-    public BusinessLogic(EGKGraphicalView drawView, Context context) {
+    public BusinessLogic(EGKGraphicalView drawView, Context context, Intent data) {
         m_drawView = drawView;
         m_context = context;
+        m_data = data;
     }
 
     public void run() {
         BluetoothProxy proxy = new BluetoothProxy("RNBT-2632");
         boolean bResult = false;
-        Intent intent = new Intent();
 
-        ;
-        int nIterations = 0;
-
+//        int nIterations = 0;
+//
 //        while (!(bResult = proxy.FindToEKGDevice())) {
 //            nIterations++;
 //
-//            m_drawView.drawStatus(proxy.GetBluetoothStatus() + " (" + String.valueOf(nIterations) + "/10)");
+//            m_drawView.drawStatus(proxy.GetBluetoothStatus() + " (" + String.valueOf(nIterations) + "/2)");
 //            m_drawView.postInvalidate();
 //
 //            SafeSleep(1000);
 //
-//            if (nIterations >= 10)
+//            if (nIterations >= 2)
 //                break; //aborting, switching to simulation
 //        }
 
@@ -45,8 +45,8 @@ public class BusinessLogic implements Runnable {
             m_drawView.drawStatus("Unable to get data via Bluetooth, going into Simulation mode...");
             m_drawView.postInvalidate();
             SafeSleep(3000);
-            Log.i(LOG_TAG, intent.getDataString());
-            RunSimulation(intent.getDataString());
+            Log.i(LOG_TAG, "EKG file selected: " + m_data.getData().toString());
+            RunSimulation(m_data.getData().toString());
             return;
         }
 
@@ -58,12 +58,12 @@ public class BusinessLogic implements Runnable {
         int nAbsolutIndex = 0;
         int nRetriesConnection = 1;
 
-        while (nRetriesConnection <= 10) {
+        while (nRetriesConnection <= 2) {
             if (!proxy.ConnectToEKGDevice()) {
-                m_drawView.drawStatus("EKG Device is not online. Will try again in 2 seconds..." + String.valueOf(nRetriesConnection) + "/10)");
+                m_drawView.drawStatus("EKG Device is not online. Will try again in 1 second..." + String.valueOf(nRetriesConnection) + "/2)");
                 m_drawView.postInvalidate();
                 nRetriesConnection++;
-                SafeSleep(2000);
+                SafeSleep(1000);
                 continue;
             }
 

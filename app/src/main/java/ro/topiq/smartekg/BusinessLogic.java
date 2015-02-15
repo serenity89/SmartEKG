@@ -1,9 +1,11 @@
 package ro.topiq.smartekg;
 
 import android.content.Context;
+import android.content.Intent;
 import android.media.AudioFormat;
 import android.media.AudioManager;
 import android.media.AudioTrack;
+import android.util.Log;
 
 import java.util.Vector;
 
@@ -12,6 +14,7 @@ import eplimited.osea.classification.ECGCODES;
 public class BusinessLogic implements Runnable {
     EGKGraphicalView m_drawView = null;
     Context m_context = null;
+    private static final String LOG_TAG = BusinessLogic.class.getSimpleName();
 
     public BusinessLogic(EGKGraphicalView drawView, Context context) {
         m_drawView = drawView;
@@ -21,7 +24,9 @@ public class BusinessLogic implements Runnable {
     public void run() {
         BluetoothProxy proxy = new BluetoothProxy("RNBT-2632");
         boolean bResult = false;
+        Intent intent = new Intent();
 
+        ;
         int nIterations = 0;
 
 //        while (!(bResult = proxy.FindToEKGDevice())) {
@@ -40,7 +45,8 @@ public class BusinessLogic implements Runnable {
             m_drawView.drawStatus("Unable to get data via Bluetooth, going into Simulation mode...");
             m_drawView.postInvalidate();
             SafeSleep(3000);
-            RunSimulation();
+            Log.i(LOG_TAG, intent.getDataString());
+            RunSimulation(intent.getDataString());
             return;
         }
 
@@ -95,10 +101,10 @@ public class BusinessLogic implements Runnable {
         }
     }
 
-    private void RunSimulation() {
+    private void RunSimulation(String ekgFile) {
         int nValue = 0;
 
-        BeatReadSimulator simulator = new BeatReadSimulator("sample.ekg");
+        BeatReadSimulator simulator = new BeatReadSimulator(ekgFile);
         HeartBeatClassifier.getInstance().setSampleRate(simulator.getSampleRate());
 
         m_drawView.drawStatus("Analysing heart beat signal, please wait...");
@@ -154,6 +160,7 @@ public class BusinessLogic implements Runnable {
 
             try
             {
+                // EKG sound 280/180
                 AudioTrack tone = generateTone(280, 180);
                 tone.play();
             }

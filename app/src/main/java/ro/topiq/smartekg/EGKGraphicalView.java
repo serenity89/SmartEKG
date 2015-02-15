@@ -125,8 +125,8 @@ public class EGKGraphicalView extends View
             }
             else
             {
-                System.out.println("Line: " + nComputedLastPositionX + ", " + nComputedLastPositionY + " - " +
-                        nComputedPositionX + ", " + nComputedPositionY);
+//                System.out.println("Line: " + nComputedLastPositionX + ", " + nComputedLastPositionY + " - " +
+//                        nComputedPositionX + ", " + nComputedPositionY);
 
                 canvas.drawLine(
                         nComputedLastPositionX,

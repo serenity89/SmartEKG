@@ -3,7 +3,9 @@ package ro.topiq.smartekg;
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -98,6 +100,7 @@ public class MainActivity extends Activity {
         if( requestCode == REQUEST_EKG_FILE) {
             if(resultCode == RESULT_OK) {
                 // switch to Draw EKG activity
+                intent.setData(data.getData());
                 intent.setClass(MainActivity.this, DrawEKG.class);
                 startActivity(intent);
             }

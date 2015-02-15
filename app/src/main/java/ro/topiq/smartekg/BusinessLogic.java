@@ -42,11 +42,18 @@ public class BusinessLogic implements Runnable {
 //        }
 
         if (!bResult) {
+            String inFile;
+
             m_drawView.drawStatus("Unable to get data via Bluetooth, going into Simulation mode...");
             m_drawView.postInvalidate();
             SafeSleep(3000);
-            Log.i(LOG_TAG, "EKG file selected: " + m_data.getData().toString());
-            RunSimulation(m_data.getData().toString());
+            if(m_data.getData() == null){
+                inFile = "sample.ekg\n";
+            } else {
+                inFile = m_data.getData().toString();
+            }
+            Log.i(LOG_TAG, "EKG file selected: " + inFile);
+            RunSimulation(inFile);
             return;
         }
 

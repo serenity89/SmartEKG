@@ -25,12 +25,12 @@ public class BeatReadSimulator {
     public BeatReadSimulator ( String ekgFile ){
         InputStream inStream = null;
         String fullEkgFilePath = Environment.getExternalStoragePublicDirectory(
-                                 Environment.DIRECTORY_DOWNLOADS).toString() +
+                                 Environment.DIRECTORY_DOWNLOADS) +
                                 "/SmartEKG/" + ekgFile;
         Log.i(LOG_TAG, "Path to selected EKG file: " + fullEkgFilePath);
 
         try {
-            inStream = new BufferedInputStream( new FileInputStream( fullEkgFilePath ));
+            inStream = new BufferedInputStream(new FileInputStream(fullEkgFilePath.substring(0, fullEkgFilePath.length()-1))); // o aberatie
             InputStreamReader isr = new InputStreamReader(inStream);
 
             BufferedReader bufferedReader = new BufferedReader(isr);

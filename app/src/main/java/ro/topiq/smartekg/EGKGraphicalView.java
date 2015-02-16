@@ -17,7 +17,7 @@ public class EGKGraphicalView extends View
 
     final int m_nDistance = 30; // HARDCODED - configurable
     final int m_nEraseOldShapeDistance = 30; // HARDCODED - configurable
-    final int m_nMaxAmplitude = 60000;
+    final int m_nMaxAmplitude = 4000;
 
     Vector<Integer> m_vectSignalDots = new Vector<Integer>();
     Vector<Integer> m_vectDetectedHeartBeats = new Vector<Integer>();

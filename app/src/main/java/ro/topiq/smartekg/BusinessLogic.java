@@ -25,14 +25,17 @@ public class BusinessLogic implements Runnable {
 
     public void run() {
 
-        //request for drawing EKG comes from BT devices list
+        // request for drawing EKG comes from BT devices list
         if(m_data.getAction().equals("device")){
+            // device name composed from two lines device name and device type
+            // shown on two lines split by EOL
+            // device name is read until EOL
             Log.i(LOG_TAG, "BT Device selected: " + m_data.getData().toString().substring(0, m_data.getData().toString().indexOf('\n')));
             BluetoothProxy proxy = new BluetoothProxy(m_data.getData().toString().substring(0, m_data.getData().toString().indexOf('\n')));
 
             proxy.FindToEKGDevice();
 
-            //getting data from device
+            // getting data from device
             m_drawView.drawStatus(proxy.GetBluetoothStatus());
             m_drawView.postInvalidate();
             SafeSleep(3000);
@@ -66,7 +69,7 @@ public class BusinessLogic implements Runnable {
                                 nValue = vectValues.elementAt(i);
                                 ProcessValue(nAbsolutIndex, nValue);
                                 ++nAbsolutIndex;
-                                SafeSleep(1000 / 50); //hardcoded
+                                SafeSleep(1000 / 50); // hardcoded
                             }
                         }
                     } else {
@@ -76,8 +79,9 @@ public class BusinessLogic implements Runnable {
             }
         }
 
-        //request for drawing EKG comes from Sample files list
-        if(m_data.getAction().equals("sample")){
+        // request for drawing EKG comes from Sample files list
+        // or device is not online
+//        if(m_data.getAction().equals("sample")){
             String inFile;
 
             m_drawView.drawStatus("Unable to get data via Bluetooth, going into Simulation mode...");
@@ -90,7 +94,7 @@ public class BusinessLogic implements Runnable {
             }
             Log.i(LOG_TAG, "EKG file selected: " + inFile);
             RunSimulation(inFile);
-        }
+//        }
     }
 
     private void RunSimulation(String ekgFile) {
@@ -111,26 +115,6 @@ public class BusinessLogic implements Runnable {
 
         System.out.println("All ok");
     }
-
-// Usage:
-//    AudioTrack tone = generateTone(440, 250);
-//    tone.play();
-//
-    private AudioTrack generateTone(double freqHz, int durationMs) {
-        int count = (int)(44100.0 * 2.0 * (durationMs / 1000.0)) & ~1;
-        short[] samples = new short[count];
-        for(int i = 0; i < count; i += 2){
-            short sample = (short)(Math.sin(2 * Math.PI * i / (44100.0 / freqHz)) * 0x7FFF);
-            samples[i] = sample;
-            samples[i + 1] = sample;
-        }
-        AudioTrack track = new AudioTrack(AudioManager.STREAM_MUSIC, 44100,
-                AudioFormat.CHANNEL_OUT_STEREO, AudioFormat.ENCODING_PCM_16BIT,
-                count * (Short.SIZE / 8), AudioTrack.MODE_STATIC);
-        track.write(samples, 0, count);
-        return track;
-    }
-
 
     private void ProcessValue(int nIndex, int nValue) {
         m_drawView.drawSignal(nIndex, nValue);
@@ -154,7 +138,8 @@ public class BusinessLogic implements Runnable {
             {
                 // EKG sound 280/180
                 AudioTrack tone = generateTone(280, 180);
-                tone.play();
+                // todo: uncomment to play heartbeat sound
+//                tone.play();
             }
             catch (Exception e)
             {
@@ -167,6 +152,25 @@ public class BusinessLogic implements Runnable {
 
         //force refresh in order to redraw screen
         m_drawView.postInvalidate();
+    }
+
+    // Usage:
+//    AudioTrack tone = generateTone(440, 250);
+//    tone.play();
+//
+    private AudioTrack generateTone(double freqHz, int durationMs) {
+        int count = (int)(44100.0 * 2.0 * (durationMs / 1000.0)) & ~1;
+        short[] samples = new short[count];
+        for(int i = 0; i < count; i += 2){
+            short sample = (short)(Math.sin(2 * Math.PI * i / (44100.0 / freqHz)) * 0x7FFF);
+            samples[i] = sample;
+            samples[i + 1] = sample;
+        }
+        AudioTrack track = new AudioTrack(AudioManager.STREAM_MUSIC, 44100,
+                AudioFormat.CHANNEL_OUT_STEREO, AudioFormat.ENCODING_PCM_16BIT,
+                count * (Short.SIZE / 8), AudioTrack.MODE_STATIC);
+        track.write(samples, 0, count);
+        return track;
     }
 
     private void SafeSleep(int nMiliseconds) {
